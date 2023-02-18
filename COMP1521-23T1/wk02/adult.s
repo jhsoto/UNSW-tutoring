@@ -12,12 +12,19 @@ main:
 	syscall
 	move	$t0, $v0
 
-	# TODO - Translate the rest of this program:
-	# if (age >= 18) {
-	#     printf("You are an adult!\n");
-	# } else {
-	#     printf("You are not an adult.\n");
-	# }
+	bge	$t0, 18, adult		# if (age >= 18) -> adult
+	b	not_adult		# else -> not_adult
+not_adult:
+	la	$a0, not_adult_str	# printf("You are not an adult.\n");
+	li	$v0, 4
+	syscall
+
+	b	epilogue		# Without this we would print adult_str too!
+
+adult:
+	la	$a0, adult_str		# printf("You are an adult!\n");
+	li	$v0, 4
+	syscall
 
 epilogue:
 	jr	$ra

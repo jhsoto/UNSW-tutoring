@@ -16,11 +16,21 @@ main:
 
 	li	$t1, 1			# int fac = 1;
 
-	# TODO - Translate this program to MIPS:
-	# for (int i = 1; i <= n; i++) {
-	#     fac *= i;
-	# }
+fac_loop_init:				# for (int i = 1; i <= n; i++) {
+	li	$t2, 1			# int i = 1;
 
+fac_loop_cond:
+	bgt	$t2, $t0, fac_loop_end	# if (i > n) -> exit loop
+
+fac_loop_body:
+	mul	$t1, $t1, $t2		# fac *= i
+
+fac_loop_inc:
+	addi	$t2, $t2, 1		# i++;
+
+	b	fac_loop_cond		# Go back to loop condition
+
+fac_loop_end:
 	la	$a0, result_str		# printf("n! = ");
 	li	$v0, 4
 	syscall

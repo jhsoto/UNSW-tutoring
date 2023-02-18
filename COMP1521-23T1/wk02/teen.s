@@ -12,12 +12,23 @@ main:
 	syscall
 	move	$t0, $v0
 
-	# TODO - Translate the rest of this program:
-	# if (age >= 13 && age <= 19) {
-	#     printf("You are a teenager!\n");
-	# } else {
-	#     printf("You are not a teenager.\n");
-	# }
+					# Here we flip the condition to be more like:
+					# if (age < 13 || age > 19) -> not_teenager
+
+	blt	$t0, 13, not_teenager	# if (age < 13) -> not_teenager
+	bgt	$t0, 19, not_teenager	# if (age > 19) -> not_teenager
+					# At this point, they have to be a teenager!
+teenager:
+	la	$a0, teenager_str	# printf("You are a teenager!\n");
+	li	$v0, 4
+	syscall
+
+	b	epilogue
+
+not_teenager:
+	la	$a0, not_teenager_str	# printf("You are not a teenager.\n");
+	li	$v0, 4
+	syscall
 
 epilogue:
 	jr	$ra
