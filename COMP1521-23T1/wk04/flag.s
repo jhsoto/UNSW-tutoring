@@ -11,7 +11,8 @@ main:
 	# Locals:
 	#	- $t0: row
 	#	- $t1: col
-	# TODO: Expand with address calculations
+	# 	- $t2: &flag[i][j]
+	#	- $t3: temp calculations
 
 row_loop_init:
 	li	$t0, 0				# int row = 0;
@@ -23,10 +24,21 @@ col_loop_init:
 col_loop_cond:
 	bge	$t1, FLAG_COLS, col_loop_end	# while (col < FLAG_COLS)
 
+	# &flag[row][col] = &flag + 1 * ((row * FLAG_COLS) + col)
+	#        base address ^     ^          ^              ^
+	#     each item is one byte ^          ^              ^
+	# each row we skip has FLAG_COLS items ^              ^
+	#                go past col items in the desired row ^
 
-	### TODO: Translate the following C code to MIPS
-	# printf("%c", flag[row][col]);
-	
+	la	$t2, flag			# &flag
+	mul	$t3, $t0, FLAG_COLS		# row * FLAG_COLS 	- items to skip to get to correct row
+	add	$t3, $t3, $t1			# row * FLAG_COLS + col - total items to skip past
+	add	$t2, $t2, $t3			# &flag[row][col] = &flag + 1 * ((row * FLAG_COLS) + col)
+
+	lb	$a0, ($t2)			# printf("%c", flag[row][col]);
+						# NOTE: we use 'lb' since we have an array of characters (bytes)
+	li	$v0, 11
+	syscall
 
 	addi	$t1, $t1, 1			# col++;
 	b	col_loop_cond
