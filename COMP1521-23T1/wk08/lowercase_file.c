@@ -19,9 +19,14 @@ int main() {
         return 1;
     }
 
-
-    // TODO: Copy "uppercase.txt" content to "lowercase.txt" in lowercase
-
+    // Read "uppercase.txt" one byte at a time
+    int uppercase_byte;
+    while ((uppercase_byte = fgetc(uppercase)) != EOF) {
+        // Make the byte from an uppercase character to a lowercase character
+        int lowercase_byte = tolower(uppercase_byte);
+        // Write the lowercase character to "lowercase.txt"
+        fputc(lowercase_byte, lowercase);
+    }
 
     fclose(uppercase);
     fclose(lowercase);
