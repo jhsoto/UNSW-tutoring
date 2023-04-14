@@ -23,6 +23,25 @@ void *deposit(void *data) {
 
         // Increment bank balance
         bank_balance++;
+        // !!THIS IS NOT ATOMIC!!
+        // Breaking this down into assembly:
+        //  lw      $t0, bank_balance
+        //  addi    $t0, $t0, 1
+        //  sw      $t0, bank_balance
+        // Notice that this 3 instructions to complete!
+        //
+        // Say we have two threads reach this at the same time, taking turns executing instructions:
+        // Thread 1                         Thread 2
+        //  lw       $t0, bank_balance                                      $t0 = 0
+        //                                   lw     $t0, bank_balance       $t0 = 0
+        // --> Both threads have just loaded the same value
+        //  addi    $t0, $t0, 1                                             $t0 = 1
+        //                                   addi    $t0, $t0, 1            $t0 = 1
+        //  sw      $t0, bank_balance
+        //                                   sw      $t0, bank_balance
+        // --> Both threads have just stored the same value - we lost an increment!
+        //
+        // This is what we call a 'race condition', where two threads 'race' to access one shared variable.
     }
 
     // Ususally we return NULL from a thread function.
@@ -43,7 +62,9 @@ int main(void) {
     int amount2 = 10000;
     pthread_create(&thread2, NULL, deposit, &amount2);
 
-    // TODO: Wait for both threads to finish
+    // Wait for both threads to finish
+    pthread_join(thread1, NULL);
+    pthread_join(thread2, NULL);
 
     // Should print $15000
     printf("Final bank balance: $%d\n", bank_balance);

@@ -6,7 +6,9 @@
 
 int bank_balance = 0;
 
-// TODO: Create a mutex for our bank account
+// This is a mutex - a global lock on certain data structures / code segments.
+// The point of a mutex to prevent concurrency issues with multiple threads messing with each other.
+pthread_mutex_t bank_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 // Deposit an amount provided in '*data' to the bank account $1 at a time
 void *deposit(void *data) {
@@ -17,10 +19,22 @@ void *deposit(void *data) {
         // Sleep for 1 nanosecond - simulate transaction time
         nanosleep(&(struct timespec){.tv_nsec = 1}, NULL);
 
-        // TODO: Get exclusive access to the bank balance before we increment it
+        // Get exclusive access to the bank balance by locking the global mutex.
+        // Only one thread can hold this lock at a time, so only one thread can execute the following code.
+        pthread_mutex_lock(&bank_mutex);
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        // This is what we call a critical section - only one thread should be here at a time
 
         // Increment bank balance
         bank_balance++;
+
+        // End of critical section
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+
+        // Release exclusive access to the bank balance by unlocking the global mutex.
+        // Once we have unlocked the mutex, another thread can take it and execute the previous code.
+        pthread_mutex_unlock(&bank_mutex);
     }
 
     return NULL;

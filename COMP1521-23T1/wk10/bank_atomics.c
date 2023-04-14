@@ -6,7 +6,8 @@
 #include <stdatomic.h>      // Need to include stdatomic.h for atomic types
 
 
-int bank_balance = 0;
+// We make bank_balance an 'atomic int' so operations on it are atomic *where possible*
+atomic_int bank_balance = 0;
 
 // Deposit an amount provided in '*data' to the bank account $1 at a time
 void *deposit(void *data) {
@@ -17,8 +18,12 @@ void *deposit(void *data) {
         // Sleep for 1 nanosecond - simulate transaction time
         nanosleep(&(struct timespec){.tv_nsec = 1}, NULL);
 
-        // TODO: Increment bank balance atomically
+        // Now that bank balance is an atomic int, this occurs atomically for free
         bank_balance++;
+
+        // NOTE: 'bank_balance = bank_balance + 1'  !!IS NOT ATOMIC!!
+        // This is because this is interpreted as: 1) Get bank_balance, 2) Add 1, 3) Store in bank_balance
+        // 'bank_balance++' and 'bank_balance += 1' are atomic as they are interpreted as: 1) Increment bank_balance by 1
     }
 
     return NULL;
