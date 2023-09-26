@@ -1,4 +1,5 @@
 // Multiply a global variable by 2
+#include <stdio.h>
 
 int my_number = 10;
 

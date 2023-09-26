@@ -1,6 +1,6 @@
 // Replace all negative numbers in an array with zero
 
-ARRAY_SIZE = 10;
+#define ARRAY_SIZE 10
 
 int main() {
     int numbers[ARRAY_SIZE] = {1, -2, 3, 4, -5, 6, 7, -8, -9, 10};
