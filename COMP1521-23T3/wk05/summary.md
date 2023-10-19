@@ -170,7 +170,7 @@ Bitwise operations can either act on *one value* like:
   - **Shuffle bits to the left `n` times**
   - Left most bits get removed
   - Right most bits are padded with 0s
-- Right Shift -- `x << n`
+- Right Shift -- `x >> n`
   - **Shuffle bits to the right `n` times**
   - Right most bits get removed
   - Left most bits are padded with 0s*
