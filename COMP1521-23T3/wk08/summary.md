@@ -203,7 +203,7 @@ Some other common reading/functions are:
 - `fgets()` & `fputs()`: Read/write entire strings
 - `printf()` & `scanf()`: Formatting printing/reading to `stdout` and `stdin` respectively, a classic :)
 - `fprintf()` & `fscanf()`: Formatting printing/reading to/from a specific file
-- `snprintf()` & `fscanf()`: Formatting printing/reading to/from a string buffer
+- `snprintf()` & `sscanf()`: Formatting printing/reading to/from a string buffer
 - `fread()` & `fwrite()`: Read/write using a given buffer to store data in / write data from respectively
 
 > Be very careful when using the `scanf` family of functions for input!  
