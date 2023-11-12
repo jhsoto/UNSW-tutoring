@@ -84,6 +84,25 @@ int main(void) {
 > **NOTE:** When compiling programs that use threads, you **must include `-pthread` as a compile option!**  
 > For example, if compiling `thread.c` (which uses threads) using `dcc`, you would type something like: `dcc -pthread thread.c -o thread`
 
+#### Joining Threads
+The last thing you need to do with threads is wait for them to finish, also called '**joining**' since the thread *rejoins the thread that originally made it.*  
+If you don't wait for a thread to finish, **as soon as the program ends all threads stop too!**  
+If your main thread relies on the other threads finishing first, make sure you wait for them.  
+This is what you'll want to do 99% of the time you use threads.
+
+The function for this is called `pthread_join()` and is quite simple.  
+It takes a thread handle that `pthread_create()` made and a pointer to a place to put a return value or NULL if you don't want the return value.
+
+A typical call will look something like this:
+```
+pthread_t thread;
+// Create a thread and get the handle for it
+pthread_create(&thread, ...);
+...
+// Wait for the thread to finish and ignore the return value
+pthread_join(thread, NULL);
+```
+
 #### Argument Passing
 A bit more on passing arguments to threads, because it is a little difficult.
 
